@@ -28,6 +28,21 @@ commits the updated `data/last_state.json` / `data/history.csv` back to the repo
   quantity dropped triggers a Telegram alert. A store disappearing from the
   table triggers a separate "check the page" alert instead of a false sale.
 
+## Adding more subscribers
+
+`TELEGRAM_CHAT_ID` accepts a comma-separated list, so anyone can subscribe to alerts:
+
+1. They message the bot (search its @username on Telegram, or share the
+   `t.me/<botname>` link from BotFather) with anything, e.g. `Hola`.
+2. Open `https://api.telegram.org/bot<TOKEN>/getUpdates` and read their
+   `message.chat.id` from the latest entry.
+3. Update the `TELEGRAM_CHAT_ID` secret to include both ids, comma-separated
+   (e.g. `1694018511,987654321`): `gh secret set TELEGRAM_CHAT_ID`.
+
+If sending to one chat id fails (e.g. someone blocked the bot), the others
+still get their alert — failures are collected and reported together, not
+short-circuited.
+
 ## Known unknown
 
 All 23 stores currently show a quantity of only 2 or 3. It's not yet confirmed
