@@ -2,7 +2,7 @@ name: Poll book stock
 
 on:
   schedule:
-    - cron: "0 * * * *" # hourly
+    - cron: "23 * * * *" # hourly, off the top of the hour to avoid GH Actions congestion
   workflow_dispatch:
 
 permissions:
