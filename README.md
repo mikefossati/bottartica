@@ -47,6 +47,16 @@ If sending to one chat id fails (e.g. someone blocked the bot), the others
 still get their alert — failures are collected and reported together, not
 short-circuited.
 
+## Tests
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+All external calls (the page fetch and the Telegram API) are mocked — tests
+never hit the real site or send real Telegram messages.
+
 ## Known unknown
 
 All 23 stores currently show a quantity of only 2 or 3. It's not yet confirmed

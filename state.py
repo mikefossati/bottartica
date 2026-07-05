@@ -16,12 +16,12 @@ def load_last_state() -> dict[str, int]:
 
 
 def save_state(stock: dict[str, int]) -> None:
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     STATE_PATH.write_text(json.dumps(stock, ensure_ascii=False, indent=2, sort_keys=True))
 
 
 def append_history(stock: dict[str, int], fetched_at: str | None = None) -> None:
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
     fetched_at = fetched_at or datetime.now(timezone.utc).isoformat()
     is_new = not HISTORY_PATH.exists()
     with HISTORY_PATH.open("a", newline="", encoding="utf-8") as f:
