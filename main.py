@@ -8,15 +8,23 @@ from state import append_history, load_last_state, save_state
 
 def diff_and_alert(old: dict[str, int], new: dict[str, int]) -> list[str]:
     messages = []
+    cold_start = not old  # very first run ever — nothing to compare, just a baseline
 
     for store, new_qty in new.items():
         old_qty = old.get(store)
         if old_qty is None:
-            continue  # first time we see this store — establishes baseline, not a sale
+            if not cold_start:
+                unit = "libro" if new_qty == 1 else "libros"
+                messages.append(f"🏬 Nueva tienda con stock: {store} ({new_qty} {unit})")
+            continue
         if new_qty < old_qty:
             sold = old_qty - new_qty
             unit = "libro" if sold == 1 else "libros"
             messages.append(f"📚 Se vendió {sold} {unit} en {store} ({old_qty} → {new_qty})")
+        elif new_qty > old_qty:
+            added = new_qty - old_qty
+            unit = "libro" if added == 1 else "libros"
+            messages.append(f"📦 Se repuso stock en {store}: +{added} {unit} ({old_qty} → {new_qty})")
 
     for store in old:
         if store not in new:

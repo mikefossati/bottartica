@@ -1,8 +1,8 @@
 # bottartica
 
 Polls a single Antártica (antartica.cl) book product page hourly, tracks per-store
-physical stock, and sends a Telegram alert whenever a store's quantity drops
-(i.e. a copy sold).
+physical stock, and sends a Telegram alert whenever it changes: a copy sold, a
+restock, or a store newly listing the book.
 
 ## Setup
 
@@ -24,9 +24,13 @@ commits the updated `data/last_state.json` / `data/history.csv` back to the repo
   store-inventory table (store name + exact quantity per store).
 - `state.py` persists the last-seen quantity per store (`data/last_state.json`)
   and an append-only log (`data/history.csv`).
-- `main.py` diffs the new fetch against the last snapshot: any store whose
-  quantity dropped triggers a Telegram alert. A store disappearing from the
-  table triggers a separate "check the page" alert instead of a false sale.
+- `main.py` diffs the new fetch against the last snapshot and alerts on:
+  - **quantity decreased** → 📚 a copy sold
+  - **quantity increased** → 📦 restocked
+  - **new store appears** in the table → 🏬 newly listed (skipped on the very
+    first-ever run, since there's no baseline yet to compare against)
+  - **store disappears** from the table → ⚠️ check-the-page warning, kept
+    separate from a sale since it more likely means a scrape/page issue
 
 ## Adding more subscribers
 
